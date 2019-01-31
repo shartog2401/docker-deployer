@@ -1,4 +1,6 @@
 FROM instrumentisto/rsync-ssh
 
-COPY ./id_rsa /root/id_rsa
-COPY ./id_rsa.pub /root/id_rsa.pub
+RUN mkdir /root/.ssh
+COPY ./id_rsa /root/.ssh/id_rsa
+COPY ./id_rsa.pub /root/.ssh/id_rsa.pub
+RUN chmod 0600 /root/.ssh -R
