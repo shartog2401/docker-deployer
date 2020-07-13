@@ -1,0 +1,27 @@
+#!/bin/bash
+SSH_USER=root
+SSH_HOST=composer.git.fluidweb.de
+SSH_PORT=$2
+if [ $SSH_PORT = "" ]
+then
+	SSH_PORT=10138
+fi
+
+SATIS_DIR=/var/www/satis
+REPOSITORY_URL=$1
+
+DIRECTORY=$(pwd)
+
+if [ -f "$DIRECTORY/.git/config" ]
+then
+    echo "$DIRECTORY/.git/config exists."
+fi
+
+if [ $REPOSITORY_URL != "" ]
+	then
+		ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "cd $SATIS_DIR && bin/satis add $REPOSITORY_URL $SATIS_DIR/satis.json" || true
+		ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "cd $SATIS_DIR && bin/satis build --repository-url $REPOSITORY_URL $SATIS_DIR/satis.json"
+	else
+		ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "cd $SATIS_DIR && bin/satis build $SATIS_DIR/satis.json"
+fi
+
